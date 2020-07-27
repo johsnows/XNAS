@@ -95,9 +95,9 @@ def main():
                 logger.info(controller.genotype())
                 logger.info("########################################################")
                 controller.print_alphas(logger)
-            if torch.cuda.is_available():
-                torch.cuda.synchronize()
-                torch.cuda.empty_cache()  # https://forums.fast.ai/t/clearing-gpu-memory-pytorch/14637
+            # if torch.cuda.is_available():
+            #     torch.cuda.synchronize()
+            #     torch.cuda.empty_cache()  # https://forums.fast.ai/t/clearing-gpu-memory-pytorch/14637
             gc.collect()
             print("now top k primitive", num_to_keep[sp], controller.get_topk_op(num_to_keep[sp]))
 
@@ -121,23 +121,25 @@ def main():
                 logger.info(controller.genotype(final=True))
         else:
             basic_op = controller.get_topk_op(num_to_keep[sp])
-        logger.info("###############final Optimal genotype: {}############")
-        logger.info(controller.genotype(final=True))
-        logger.info("########################################################")
-        controller.print_alphas(logger)
+        basic_op = controller.get_topk_op(num_to_keep[sp])
+        print('now top_{}'.format(num_to_keep[sp]), basic_op)
+        # logger.info("###############final Optimal genotype: {}############")
+        # logger.info(controller.genotype(final=True))
+        # logger.info("########################################################")
+        # controller.print_alphas(logger)
 
-        logger.info('Restricting skipconnect...')
-        for sks in range(0, 9):
-            max_sk = 8-sks
-            num_sk = controller.get_skip_number()
-            if not num_sk > max_sk:
-                continue
-            while num_sk > max_sk:
-                controller.delete_skip()
-                num_sk = controller.get_skip_number()
-
-            logger.info('Number of skip-connect: %d', max_sk)
-            logger.info(controller.genotype(final=True))
+        # logger.info('Restricting skipconnect...')
+        # for sks in range(0, 9):
+        #     max_sk = 8-sks
+        #     num_sk = controller.get_skip_number()
+        #     if not num_sk > max_sk:
+        #         continue
+        #     while num_sk > max_sk:
+        #         controller.delete_skip()
+        #         num_sk = controller.get_skip_number()
+        #
+        #     logger.info('Number of skip-connect: %d', max_sk)
+        #     logger.info(controller.genotype(final=True))
 
 
 def train_epoch(train_loader, valid_loader, model, architect, loss_fun, w_optimizer, alpha_optimizer,
