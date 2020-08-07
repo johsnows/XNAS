@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import copy
+import numpy as np
 
 '''
 Darts: highly copyed from https://github.com/khanrc/pt.darts
@@ -25,6 +26,8 @@ class DartsCNNController(nn.Module):
             self.alpha =nn.Parameter(
                     1e-3*torch.ones(self.net.all_edges, self.n_ops)
                     )
+        alpha=np.load('/userhome/code/similar_nas/alpha.npy')
+        self.alpha=nn.Parameter(torch.tensor(alpha))
         
         print('rand:', rand)
         print('ALPHA:', self.alpha)
