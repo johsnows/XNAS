@@ -28,7 +28,7 @@ def main():
     search_space = build_space()
     # init controller and architect
     loss_fun = nn.CrossEntropyLoss().cuda()
-    darts_controller = DartsCNNController(search_space, loss_fun)
+    darts_controller = DartsCNNController(search_space, loss_fun, rand=True)
     darts_controller.cuda()
     architect = Architect(
         darts_controller, cfg.OPTIM.MOMENTUM, cfg.OPTIM.WEIGHT_DECAY)
@@ -70,6 +70,7 @@ def main():
             torch.cuda.synchronize()
             torch.cuda.empty_cache()  # https://forums.fast.ai/t/clearing-gpu-memory-pytorch/14637
         gc.collect()
+        print('ALPHA:', darts_controller.alphas())
 
 
 def train_epoch(train_loader, valid_loader, model, architect, loss_fun, w_optimizer, alpha_optimizer, lr, train_meter, cur_epoch):

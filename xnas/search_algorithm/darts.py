@@ -11,15 +11,23 @@ Darts: highly copyed from https://github.com/khanrc/pt.darts
 class DartsCNNController(nn.Module):
     """ SearchCNN controller supporting multi-gpu """
 
-    def __init__(self, net, criterion, device_ids=None):
+    def __init__(self, net, criterion, device_ids=None, rand=False):
         super().__init__()
         if device_ids is None:
             device_ids = list(range(torch.cuda.device_count()))
         self.net = net
         self.device_ids = device_ids
         self.n_ops = self.net.num_ops
-        self.alpha = nn.Parameter(
-            1e-3*torch.randn(self.net.all_edges, self.n_ops))
+        if rand:
+            self.alpha = nn.Parameter(
+                1e-3*torch.randn(self.net.all_edges, self.n_ops))
+        else:
+            self.alpha =nn.Parameter(
+                    1e-3*torch.ones(self.net.all_edges, self.n_ops)
+                    )
+        
+        print('rand:', rand)
+        print('ALPHA:', self.alpha)
         self.criterion = criterion
 
         # setup alphas list
