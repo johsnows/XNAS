@@ -46,6 +46,7 @@ class Categorical(object):
         """
         rand = np.random.rand(self.d, 1)    # range of random number is [0, 1)
         cum_theta = self.theta.cumsum(axis=1)    # (d, Cmax)
+        print('cum_theta[8]', cum_theta[:,:])
 
         # x[i, j] becomes 1 iff cum_theta[i, j] - theta[i, j] <= rand[i] < cum_theta[i, j]
         x = (cum_theta - self.theta <= rand) & (rand < cum_theta)
