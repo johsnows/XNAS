@@ -237,6 +237,7 @@ class PdartsCNNController(nn.Module):
         self.n_ops = len(self.net.basic_op_list[0])
         self.alpha = nn.Parameter(
             1e-3*torch.randn(self.net.all_edges, self.n_ops))
+        print("self.alpha:", self.alpha)
         self.criterion = criterion
 
         # setup alphas list
