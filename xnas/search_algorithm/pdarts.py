@@ -283,8 +283,10 @@ class PdartsCNNController(nn.Module):
                     if op == 'none':
                         _i=i if i<14 else i-14
                         self.alpha[i//14][_i][j] = -1  # 让none操作对应的权值将为最低
-
-        return self.net.genotype(self.alpha.cpu().detach().numpy())
+        alpha=[]
+        alpha.append(self.alpha[0].cpu().detach().numpy())
+        alpha.append(self.alpha[0].cpu().detach().numpy())
+        return self.net.genotype(alpha)
 
     def get_skip_number(self):
         normal = self.genotype(final=True).normal
