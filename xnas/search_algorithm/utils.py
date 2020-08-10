@@ -46,7 +46,7 @@ class Categorical(object):
         """
         # rand = np.random.rand(self.d, 1)    # range of random number is [0, 1)
         cum_theta = self.theta.cumsum(axis=1)    # (d, Cmax)
-        rand = np.random.uniform(0, cum_theta[:, 8])
+        rand = np.random.uniform(0, cum_theta[:, 7])
         rand.reshape(self.d, 1)
         print('cum_theta[8]', cum_theta[:,:])
 
