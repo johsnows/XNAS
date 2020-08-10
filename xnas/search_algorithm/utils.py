@@ -44,8 +44,10 @@ class Categorical(object):
         :return: sampled variables from the categorical distribution (one-hot representation)
         :rtype: array_like, shape=(d, Cmax), dtype=bool
         """
-        rand = np.random.rand(self.d, 1)    # range of random number is [0, 1)
+        # rand = np.random.rand(self.d, 1)    # range of random number is [0, 1)
         cum_theta = self.theta.cumsum(axis=1)    # (d, Cmax)
+        rand = np.random.uniform(0, cum_theta[:, 8])
+        rand.reshape(self.d, 1)
         print('cum_theta[8]', cum_theta[:,:])
 
         # x[i, j] becomes 1 iff cum_theta[i, j] - theta[i, j] <= rand[i] < cum_theta[i, j]
