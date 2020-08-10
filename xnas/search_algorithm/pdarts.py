@@ -197,9 +197,9 @@ class PdartsCNN(nn.Module):
         Genotype = namedtuple(
             'Genotype', 'normal normal_concat reduce reduce_concat')
         theta_norm = darts_weight_unpack(
-            theta[0:self.num_edges], self.n_nodes)
+            theta[0], self.n_nodes)
         theta_reduce = darts_weight_unpack(
-            theta[self.num_edges:], self.n_nodes)
+            theta[1], self.n_nodes)
         gene_normal = self.parse_from_numpy(
             theta_norm, k=2, basic_op_list=self.basic_op_list[:self.len_op//2])
         gene_reduce = self.parse_from_numpy(
@@ -235,8 +235,14 @@ class PdartsCNNController(nn.Module):
         self.net = net
         self.device_ids = device_ids
         self.n_ops = len(self.net.basic_op_list[0])
-        self.alpha = nn.Parameter(
-            1e-3*torch.randn(self.net.all_edges, self.n_ops))
+        # self.alpha = nn.Parameter(
+        #     1e-3*torch.randn(self.net.all_edges, self.n_ops))
+        self.alphas_normal = nn.Parameter(torch.FloatTensor(1e-3*np.random.randn(self.net.all_edges//2, self.n_ops)))
+        self.alphas_reduce = nn.Parameter(torch.FloatTensor(1e-3*np.random.randn(self.net.all_edges//2, self.n_ops)))
+        self.alpha=[
+            self.alphas_normal,
+            self.alphas_reduce
+        ]
         print("self.alpha:", self.alpha)
         self.criterion = criterion
 
@@ -273,7 +279,8 @@ class PdartsCNNController(nn.Module):
             for i in range(self.net.all_edges):
                 for j, op in enumerate(self.net.basic_op_list[i]):
                     if op == 'none':
-                        self.alpha[i][j] = -1  # 让none操作对应的权值将为最低
+                        _i=i if i<14 else i-14
+                        self.alpha[i//14][_i][j] = -1  # 让none操作对应的权值将为最低
 
         return self.net.genotype(self.alpha.cpu().detach().numpy())
 
@@ -304,7 +311,7 @@ class PdartsCNNController(nn.Module):
                             skip_id.append(j)
                             break
 
-        alpha = self.alpha.cpu().detach().numpy()
+        alpha = self.alpha.cpu().detach().numpy()[0]
         print('basic_op_list', self.net.basic_op_list)
         print('skip_edg', skip_edg)
         print('skip_id', skip_id)
@@ -313,8 +320,8 @@ class PdartsCNNController(nn.Module):
         # print('skip_edg[min] skip_id[min]', skip_edg[min], skip_id[min])
         # print('alpha_min')
         for i in range(self.n_ops):
-            print(self.alpha[skip_edg[min]][i])
-        self.alpha[skip_edg[min]][skip_id[min]] = 0.0
+            print(self.alpha[0][skip_edg[min]][i])
+        self.alpha[0][skip_edg[min]][skip_id[min]] = 0.0
 
     def get_topk_op(self, k):
         basic_op_list = np.array(self.net.basic_op_list)
@@ -323,7 +330,8 @@ class PdartsCNNController(nn.Module):
         # print(type(basic_op_list[0][0]))
         new_basic_op = []
         for i in range(self.net.all_edges):
-            _, index = torch.topk(self.alpha[i], k)
+            _i=i if i<14 else i-14
+            _, index = torch.topk(self.alpha[i//14][_i], k)
             primitive = basic_op_list[i][index.cpu()].tolist()
             new_basic_op.append(primitive)
         return new_basic_op
