@@ -253,7 +253,9 @@ class PdartsCNNController(nn.Module):
                 self._alphas.append((n, p))
 
     def forward(self, x):
-        weights_ = F.softmax(self.alpha, dim=-1)
+        weights_ = []
+        weights_.extend(F.softmax(self.alpha[0], dim=-1))
+        weights_.extend(F.softmax(self.alpha[1], dim=-1))
 
         if len(self.device_ids) == 1:
             return self.net(x, weights_)
