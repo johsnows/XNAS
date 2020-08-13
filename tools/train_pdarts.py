@@ -22,6 +22,24 @@ writer = SummaryWriter(log_dir=os.path.join(cfg.OUT_DIR, "tb"))
 
 logger = logging.get_logger(__name__)
 
+import torchvision.datasets as dset
+import torchvision.transforms as transforms
+def _data_transforms_cifar10():
+    CIFAR_MEAN = [0.49139968, 0.48215827, 0.44653124]
+    CIFAR_STD = [0.24703233, 0.24348505, 0.26158768]
+
+    train_transform = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
+    ])
+
+    valid_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
+    ])
+    return train_transform, valid_transform
 
 def main():
     setup_env()
@@ -29,8 +47,23 @@ def main():
     # init controller and architect
     loss_fun = nn.CrossEntropyLoss().cuda()
     # load dataset
-    [train_, val_] = _construct_loader(
-        cfg.SEARCH.DATASET, cfg.SEARCH.SPLIT, cfg.SEARCH.BATCH_SIZE)
+    # [train_, val_] = _construct_loader(
+    #     cfg.SEARCH.DATASET, cfg.SEARCH.SPLIT, cfg.SEARCH.BATCH_SIZE)
+
+    train_transform, valid_transform = _data_transforms_cifar10()
+    train_data = dset.CIFAR10(root='/gdata/cifar10/cifar-10-batches-py"', train=True, download=True, transform=train_transform)
+    num_train = len(train_data)
+    indices = list(range(num_train))
+    split = int(np.floor(0.5 * num_train))
+    train_ = torch.utils.data.DataLoader(
+        train_data, batch_size=config.BATCH_SIZE,
+        sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[:split]),
+        pin_memory=True, num_workers=config.NUM_WORKERS)
+
+    val_ = torch.utils.data.DataLoader(
+        train_data, batch_size=config.BATCH_SIZE,
+        sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[split:num_train]),
+        pin_memory=True, num_workers=config.NUM_WORKERS)
 
     num_to_keep = [5, 3, 1]
     eps_no_archs = [10, 10, 10]
@@ -71,6 +104,7 @@ def main():
         scale_factor = 0.2
         for cur_epoch in range(start_epoch, cfg.OPTIM.MAX_EPOCH):
             print('cur_epoch', cur_epoch)
+            lr_scheduler.step()
             lr = lr_scheduler.get_last_lr()[0]
             if cur_epoch < eps_no_archs[sp]:
                 controller.update_p(float(drop_rate[sp]) * (cfg.OPTIM.MAX_EPOCH - cur_epoch - 1) / cfg.OPTIM.MAX_EPOCH)
@@ -85,7 +119,6 @@ def main():
                 checkpoint_file = checkpoint.save_checkpoint(
                     controller, w_optim, cur_epoch)
                 logger.info("Wrote checkpoint to: {}".format(checkpoint_file))
-            lr_scheduler.step()
             # Evaluate the model
             next_epoch = cur_epoch + 1
             if next_epoch >= cfg.OPTIM.MAX_EPOCH-5:
