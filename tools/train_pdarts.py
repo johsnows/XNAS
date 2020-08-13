@@ -56,14 +56,14 @@ def main():
     indices = list(range(num_train))
     split = int(np.floor(0.5 * num_train))
     train_ = torch.utils.data.DataLoader(
-        train_data, batch_size=config.BATCH_SIZE,
+        train_data, batch_size=cfg.SEARCH.BATCH_SIZE,
         sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[:split]),
-        pin_memory=True, num_workers=config.NUM_WORKERS)
+        pin_memory=True, num_workers=cfg.SEARCH.NUM_WORKERS)
 
     val_ = torch.utils.data.DataLoader(
-        train_data, batch_size=config.BATCH_SIZE,
+        train_data, batch_size=cfg.SEARCH.BATCH_SIZE,
         sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[split:num_train]),
-        pin_memory=True, num_workers=config.NUM_WORKERS)
+        pin_memory=True, num_workers=cfg.SEARCH.NUM_WORKERS)
 
     num_to_keep = [5, 3, 1]
     eps_no_archs = [10, 10, 10]
