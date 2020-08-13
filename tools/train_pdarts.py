@@ -51,7 +51,7 @@ def main():
     #     cfg.SEARCH.DATASET, cfg.SEARCH.SPLIT, cfg.SEARCH.BATCH_SIZE)
 
     train_transform, valid_transform = _data_transforms_cifar10()
-    train_data = dset.CIFAR10(root='/gdata/cifar10/cifar-10-batches-py/"', train=True, download=True, transform=train_transform)
+    train_data = dset.CIFAR10(root='/gdata/cifar10/cifar-10-batches-py/"', train=True, download=False, transform=train_transform)
     num_train = len(train_data)
     indices = list(range(num_train))
     split = int(np.floor(0.5 * num_train))
