@@ -47,23 +47,23 @@ def main():
     # init controller and architect
     loss_fun = nn.CrossEntropyLoss().cuda()
     # load dataset
-    # [train_, val_] = _construct_loader(
-    #     cfg.SEARCH.DATASET, cfg.SEARCH.SPLIT, cfg.SEARCH.BATCH_SIZE)
+    [train_, val_] = _construct_loader(
+        cfg.SEARCH.DATASET, cfg.SEARCH.SPLIT, cfg.SEARCH.BATCH_SIZE)
 
-    train_transform, valid_transform = _data_transforms_cifar10()
-    train_data = dset.CIFAR10(root='cifar10', train=True, download=True, transform=train_transform)
-    num_train = len(train_data)
-    indices = list(range(num_train))
-    split = int(np.floor(0.5 * num_train))
-    train_ = torch.utils.data.DataLoader(
-        train_data, batch_size=cfg.SEARCH.BATCH_SIZE,
-        sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[:split]),
-        pin_memory=True, num_workers=cfg.DATA_LOADER.NUM_WORKERS)
-
-    val_ = torch.utils.data.DataLoader(
-        train_data, batch_size=cfg.SEARCH.BATCH_SIZE,
-        sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[split:num_train]),
-        pin_memory=True, num_workers=cfg.DATA_LOADER.NUM_WORKERS)
+    # train_transform, valid_transform = _data_transforms_cifar10()
+    # train_data = dset.CIFAR10(root='cifar10', train=True, download=True, transform=train_transform)
+    # num_train = len(train_data)
+    # indices = list(range(num_train))
+    # split = int(np.floor(0.5 * num_train))
+    # train_ = torch.utils.data.DataLoader(
+    #     train_data, batch_size=cfg.SEARCH.BATCH_SIZE,
+    #     sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[:split]),
+    #     pin_memory=True, num_workers=cfg.DATA_LOADER.NUM_WORKERS)
+    #
+    # val_ = torch.utils.data.DataLoader(
+    #     train_data, batch_size=cfg.SEARCH.BATCH_SIZE,
+    #     sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[split:num_train]),
+    #     pin_memory=True, num_workers=cfg.DATA_LOADER.NUM_WORKERS)
 
     num_to_keep = [5, 3, 1]
     eps_no_archs = [10, 10, 10]
