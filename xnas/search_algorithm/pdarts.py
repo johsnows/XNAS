@@ -282,7 +282,7 @@ class PdartsCNNController(nn.Module):
                 for j, op in enumerate(self.net.basic_op_list[i]):
                     if op == 'none':
                         _i=i if i<14 else i-14
-                        self.alpha[i//14][_i][j] = -1  # 让none操作对应的权值将为最低
+                        self.alpha[i//14][_i][j] = 0  # 让none操作对应的权值将为最低
         alpha=[]
         alpha.append(F.softmax(self.alpha[0], dim=-1).cpu().detach().numpy())
         alpha.append(F.softmax(self.alpha[1], dim=-1).cpu().detach().numpy())
