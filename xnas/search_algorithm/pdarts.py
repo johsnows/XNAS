@@ -282,7 +282,7 @@ class PdartsCNNController(nn.Module):
                 for j, op in enumerate(self.net.basic_op_list[i]):
                     if op == 'none':
                         _i=i if i<14 else i-14
-                        self.alpha[i//14][_i][j] = 0  # 让none操作对应的权值将为最低
+                        self.alpha[i//14][_i][j] = -10000  # 让none操作对应的权值将为最低
         alpha=[]
         alpha.append(F.softmax(self.alpha[0], dim=-1).cpu().detach().numpy())
         alpha.append(F.softmax(self.alpha[1], dim=-1).cpu().detach().numpy())
@@ -325,7 +325,8 @@ class PdartsCNNController(nn.Module):
         # print('alpha_min')
         for i in range(self.n_ops):
             print(self.alpha[0][skip_edg[min]][i])
-        self.alpha[0][skip_edg[min]][skip_id[min]] = 0.0
+            print(alpha[0][skip_edg[min]][i])
+        self.alpha[0][skip_edg[min]][skip_id[min]] = -10000
 
     def get_topk_op(self, k):
         basic_op_list = np.array(self.net.basic_op_list)
