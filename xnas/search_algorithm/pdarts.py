@@ -315,7 +315,7 @@ class PdartsCNNController(nn.Module):
                             skip_id.append(j)
                             break
 
-        alpha = self.alpha[0].cpu().detach().numpy()
+        alpha = F.softmax(self.alpha[0], dim=-1).cpu().detach().numpy()
         print('basic_op_list', self.net.basic_op_list)
         print('skip_edg', skip_edg)
         print('skip_id', skip_id)
