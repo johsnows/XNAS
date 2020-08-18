@@ -102,6 +102,8 @@ def main():
         # Perform the training loop
         logger.info("Start epoch: {}".format(start_epoch + 1))
         scale_factor = 0.2
+        '''test'''
+        controller.genotype()
         for cur_epoch in range(start_epoch, cfg.OPTIM.MAX_EPOCH):
             print('cur_epoch', cur_epoch)
             lr_scheduler.step()
@@ -136,7 +138,7 @@ def main():
 
         if sp == len(num_to_keep) - 1:
             logger.info("###############final Optimal genotype: {}############")
-            logger.info(controller.genotype(final=True))
+            logger.info(controller.genotype())
             logger.info("########################################################")
             controller.print_alphas(logger)
 
@@ -151,7 +153,7 @@ def main():
                     num_sk = controller.get_skip_number()
 
                 logger.info('Number of skip-connect: %d', max_sk)
-                logger.info(controller.genotype(final=True))
+                logger.info(controller.genotype())
         else:
             basic_op = controller.get_topk_op(num_to_keep[sp])
         basic_op = controller.get_topk_op(num_to_keep[sp])
