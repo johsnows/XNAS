@@ -325,7 +325,7 @@ class PdartsCNNController(nn.Module):
         # print('alpha_min')
         for i in range(self.n_ops):
             print(self.alpha[0][skip_edg[min]][i])
-            print(alpha[0][skip_edg[min]][i])
+            print(alpha[skip_edg[min]][i])
         self.alpha[0][skip_edg[min]][skip_id[min]] = -10000
 
     def get_topk_op(self, k):
