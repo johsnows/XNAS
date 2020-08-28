@@ -34,4 +34,4 @@ OPTIM:
 DARTS:
   ALPHA_LR: 6e-4
 RNG_SEED: 1
-OUT_DIR: '/userhome/project/XNAS/experiment/pdarts/newarch/seed1'
+OUT_DIR: '/userhome/project/XNAS/experiment/pdarts/testseed1'
