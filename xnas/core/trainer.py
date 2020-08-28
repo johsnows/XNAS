@@ -45,6 +45,7 @@ def setup_env():
         # Fix the RNG seeds (see RNG comment in core/config.py for discussion)
         print('cfg.RNGSEEd', cfg.RNG_SEED)
         np.random.seed(cfg.RNG_SEED)
+        print('seed', np.random.get_state()[1][0])
         torch.manual_seed(cfg.RNG_SEED)
         torch.cuda.manual_seed_all(cfg.RNG_SEED)
         random.seed(cfg.RNG_SEED)
