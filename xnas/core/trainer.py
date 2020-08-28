@@ -47,8 +47,8 @@ def setup_env():
         torch.manual_seed(cfg.RNG_SEED)
         torch.cuda.manual_seed_all(cfg.RNG_SEED)
         random.seed(cfg.RNG_SEED)
-        torch.backends.cudnn.benchmark = False
-        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = True
+        # torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.enabled = True
     else:
         # Configure the CUDNN backend
