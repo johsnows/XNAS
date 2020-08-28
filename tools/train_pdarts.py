@@ -107,7 +107,7 @@ def main():
         controller.genotype()
         for cur_epoch in range(start_epoch, cfg.OPTIM.MAX_EPOCH):
             print('cur_epoch', cur_epoch)
-            print('alpha:', controller.alphas())
+            print('alpha:', controller.alphas)
             lr_scheduler.step()
             lr = lr_scheduler.get_last_lr()[0]
             if cur_epoch < eps_no_archs[sp]:
