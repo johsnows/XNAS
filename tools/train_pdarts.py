@@ -43,7 +43,7 @@ def _data_transforms_cifar10():
 
 def main():
     setup_env()
-    print('seed', np.random.get_state()[1][0])
+    # print('seed', np.random.get_state()[1][0])
     # loadiong search space
     # init controller and architect
     loss_fun = nn.CrossEntropyLoss().cuda()
