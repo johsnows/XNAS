@@ -354,6 +354,7 @@ class PdartsCNNController(nn.Module):
     def subnet_weights(self):
         res = []
         for k, v in self.named_weights():
+            print('k:', k)
             if 'alpha' not in k:
                 res.append(v)
         return res
