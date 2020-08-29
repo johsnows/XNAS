@@ -238,7 +238,7 @@ class PdartsCNNController(nn.Module):
         # self.alpha = nn.Parameter(
         #     1e-3*torch.randn(self.net.all_edges, self.n_ops))
         # print('seed', np.random.get_state()[1][0])
-        np.random.seed(2)
+        np.random.seed(3)
         # print('seed', np.random.get_state()[1][0])
         self.alphas_normal = nn.Parameter(torch.FloatTensor(1e-3*np.random.randn(self.net.all_edges//2, self.n_ops)))
         self.alphas_reduce = nn.Parameter(torch.FloatTensor(1e-3*np.random.randn(self.net.all_edges//2, self.n_ops)))
