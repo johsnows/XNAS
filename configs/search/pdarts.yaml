@@ -33,5 +33,5 @@ OPTIM:
   WEIGHT_DECAY: 3e-4
 DARTS:
   ALPHA_LR: 6e-4
-RNG_SEED: 3
-OUT_DIR: '/userhome/project/XNAS/experiment/pdarts/testseed3'
+RNG_SEED: 4
+OUT_DIR: '/userhome/project/XNAS/experiment/pdarts/testseed4'
